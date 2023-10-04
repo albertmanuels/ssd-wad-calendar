@@ -8,14 +8,14 @@ export const useView = (props: CalendarProps) => {
 	const [currMonth, setCurrMonth] = useState(startDate.getMonth());
 	const [currYear, setCurrYear] = useState(startDate.getFullYear());
 	const currentMonth = MONTHS[currMonth];
-	const [dates, setDates] = useState<Array<string | number>>([]);
+	const [dates, setDates] = useState<Array<string>>([]);
 	const DAYS_IN_MONTH = getDaysInMonth(currMonth, currYear);
 
 	useEffect(() => {
 		const newDays = () => {
 			const range = dateRange(DAYS_IN_MONTH);
 			const startDayIndex = DAYS.indexOf(getSortedDays(currMonth, currYear)[0]);
-			const tempArr = Array(range.length + startDayIndex).fill("");
+			const tempArr = Array(range.length + startDayIndex).fill(null);
 			const totalLength = range.length + startDayIndex;
 
 			tempArr.splice(startDayIndex, 0, ...range);
@@ -44,10 +44,6 @@ export const useView = (props: CalendarProps) => {
 		}
 	};
 
-	const onClickDate = (date: number | string) => {
-		console.log(date);
-	};
-
 	const thisYearandMonth =
 		new Date().getFullYear() === currYear &&
 		new Date().getMonth() === currMonth;
@@ -59,7 +55,6 @@ export const useView = (props: CalendarProps) => {
 		dates,
 		setCurrMonth,
 		setCurrYear,
-		onClickDate,
 		handleNextMonth,
 		handlePrevMonth,
 		thisYearandMonth,

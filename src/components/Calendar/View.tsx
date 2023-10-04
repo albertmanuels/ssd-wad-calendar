@@ -2,17 +2,20 @@ import { DAYS } from "../../constants";
 import "./View.style.css";
 import { CalendarProps } from "./View.types";
 import { useView } from "./View.hook";
+import { getDateObj, isSameDate } from "@/src/utils/utils";
+import { Fragment } from "react";
+import EventItem from "../EventItem";
 
 const Calendar = (props: CalendarProps) => {
 	const { events } = props;
 	const {
 		currYear,
+		currMonth,
 		currentMonth,
 		dates,
-		onClickDate,
+
 		handleNextMonth,
 		handlePrevMonth,
-		thisYearandMonth,
 	} = useView(props);
 
 	return (
@@ -36,36 +39,26 @@ const Calendar = (props: CalendarProps) => {
 			</ul>
 			<div className="calendar-body">
 				{dates.map((date, idx) => (
-					<button
+					<div
 						key={idx}
-						className={`date-box ${!date && "no-date"} ${
-							date === new Date().getDate() && thisYearandMonth && "today"
+						className={`date-box ${!date ? "no-date" : ""} ${
+							isSameDate(new Date(), getDateObj(date, currMonth, currYear))
+								? "today"
+								: ""
 						}`}
-						disabled={!date}
-						onClick={() => onClickDate(date)}
 					>
 						<span className="date">{date}</span>
 						<div className="event-wrapper">
-							{events.map(
-								(event, idx) =>
-									date === new Date().getDate() &&
-									thisYearandMonth && (
-										<div className="event" key={idx}>
-											<p className="event-name">{event.name}</p>
-											<ol className="event-list">
-												{event.invitees.map((email) => (
-													<li key={email}>{email}</li>
-												))}
-											</ol>
-
-											<p className="event-schedule">
-												{event.date.toLocaleDateString("id")}
-											</p>
-										</div>
-									)
-							)}
+							{events.map((event, idx) => (
+								<Fragment key={idx}>
+									{isSameDate(
+										getDateObj(date, currMonth, currYear),
+										event.date
+									) && <EventItem event={event} />}
+								</Fragment>
+							))}
 						</div>
-					</button>
+					</div>
 				))}
 			</div>
 		</div>

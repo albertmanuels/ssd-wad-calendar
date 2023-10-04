@@ -1,0 +1,11 @@
+.eventItem {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	padding: 5px;
+	color: #ffffff;
+	text-align: start;
+	background-color: #001524;
+	cursor: pointer;
+}
