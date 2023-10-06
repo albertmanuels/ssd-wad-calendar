@@ -83,3 +83,45 @@ export const formattedTime = (time: string, withMeridian: boolean = true) => {
 export const generateUUID = () => {
 	return Math.random().toString(36).substring(2, 6);
 };
+
+export const isValidEmail = (email: string) => {
+	return /\S+@\S+\.\S+/.test(email);
+};
+
+export const lightOrDark = (color: string) => {
+	let r = color[1];
+	let g = color[2];
+	let b = color[3];
+
+	let hsp = 0;
+
+	if (color.match(/^rgb/)) {
+		// If HEX --> store the red, green, blue values in separate variables
+		color = String(
+			color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/)
+		);
+	} else {
+		const newColor = String(color);
+		color = String(
+			+("0x" + color.slice(1).replace(newColor.length < 5 ? /./g : "", "$&$&"))
+		);
+
+		r = String(Number(color) >> 16);
+		g = String((Number(color) >> 8) & 255);
+		b = String(Number(color) & 255);
+	}
+
+	// HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+	const R = Number(r);
+	const G = Number(g);
+	const B = Number(b);
+
+	hsp = Math.sqrt(0.299 * (R * R) + 0.587 * (G * G) + 0.114 * (B * B));
+
+	// Using the HSP value, determine whether the color is light or dark
+	if (hsp > 127.5) {
+		return "light";
+	} else {
+		return "dark";
+	}
+};

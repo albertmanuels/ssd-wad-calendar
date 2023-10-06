@@ -1,19 +1,32 @@
 import { CalendarContext } from "@/src/context";
-import { FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { AddEventModalProps } from "./View.types";
-import { formattedTime, generateUUID } from "@/src/utils/utils";
+import { formattedTime, generateUUID, isValidEmail } from "@/src/utils/utils";
 import { EventObj } from "@/src/types";
 import { UpdateMyEventStore } from "@/src/utils/localStorage";
+import useGenerateRandomColor from "@/src/hooks/useGenerateRandomColor";
 
 export const useView = (props: AddEventModalProps) => {
-	const { eventDate, onClose, onGenerateRandomColor } = props;
+	const { eventDate, onClose } = props;
 	const { events, setEvents } = useContext(CalendarContext);
 	const [title, setTitle] = useState("");
 	const [time, setTime] = useState("");
 	const [guests, setGuests] = useState<Array<string | null>>([]);
 	const [guestValue, setGuestValue] = useState("");
+	const [error, setError] = useState<boolean>(false);
 	const id = generateUUID();
 	const createdEventDate = new Date(eventDate).toLocaleDateString();
+	const { color, generateColor } = useGenerateRandomColor();
+
+	const handleOnChangeGuest = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!isValidEmail(e.target.value)) {
+			setError(true);
+		} else {
+			setError(false);
+		}
+
+		setGuestValue(e.target.value);
+	};
 
 	const handleAddGuest = () => {
 		setGuests((prev) => [...prev, guestValue]);
@@ -29,6 +42,7 @@ export const useView = (props: AddEventModalProps) => {
 			time: formattedTime(time),
 			invitees: guests,
 			date: createdEventDate,
+			color: `#${color}`,
 		};
 		setEvents((state: EventObj) => ({
 			...state,
@@ -61,6 +75,8 @@ export const useView = (props: AddEventModalProps) => {
 		handleAddGuest,
 		handleDeleteGuest,
 		isDisabledSaveBtn,
-		onGenerateRandomColor,
+		generateColor,
+		handleOnChangeGuest,
+		error,
 	};
 };

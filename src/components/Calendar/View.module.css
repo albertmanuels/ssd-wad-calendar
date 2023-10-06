@@ -1,21 +1,22 @@
-.calendar-wrapper {
+.calendarWrapper {
 	width: 100%;
-	margin-top: 80px;
+	margin-top: 50px;
+	margin-bottom: 50px;
 }
 
-.calendar-navigation {
+.calendarNavigation {
 	display: flex;
 	margin-bottom: 30px;
 }
 
-.navigation-wrapper {
+.navigationWrapper {
 	display: flex;
-	gap: 40px;
+	gap: 10px;
 	margin: 0 auto;
 	align-items: center;
 }
 
-.left-arrow {
+.leftArrow {
 	display: block;
 	width: 30px;
 	height: 30px;
@@ -24,7 +25,7 @@
 	cursor: pointer;
 }
 
-.right-arrow {
+.rightArrow {
 	display: block;
 	width: 30px;
 	height: 30px;
@@ -33,27 +34,32 @@
 	cursor: pointer;
 }
 
-.calendar-header {
+.monthYearWrapper {
+	width: 200px;
+	text-align: center;
+}
+
+.calendarHeader {
 	width: 100%;
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 }
 
-.calendar-body {
+.calendarBody {
 	height: calc(100% - 30px);
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	background-color: #ffffff;
 }
 
-.list-day {
+.listDay {
 	text-align: center;
 	color: #ffffff;
 	background-color: #000000;
 	padding: 8px 0;
 }
 
-.date-box {
+.dayBox {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -71,18 +77,18 @@
 	font-weight: 600;
 }
 
-.date-box.today {
+.today {
 	background-color: #fff2d8;
 }
 
-.no-date {
+.noDate {
 	border: none;
 	cursor: initial;
 	border-top: 1px solid black;
 	background-color: #cccccc;
 }
 
-.event-wrapper {
+.eventWrapper {
 	width: 100%;
 	display: flex;
 	flex-direction: column;

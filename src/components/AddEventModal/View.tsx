@@ -11,13 +11,14 @@ const AddEventModal = (props: AddEventModalProps) => {
 		time,
 		setTime,
 		guestValue,
-		setGuestValue,
 		guests,
 		handleAddGuest,
 		handleDeleteGuest,
 		onSubmit,
 		isDisabledSaveBtn,
-		onGenerateRandomColor,
+		generateColor,
+		handleOnChangeGuest,
+		error,
 	} = useView(props);
 
 	return (
@@ -51,20 +52,25 @@ const AddEventModal = (props: AddEventModalProps) => {
 						<div className={css.guestSection}>
 							<div className={css.guestInputSection}>
 								<i className={css.guestIcon} />
-								<input
-									className={css.guestInput}
-									value={guestValue}
-									placeholder="Add Guests"
-									type="email"
-									onChange={(e) => setGuestValue(e.target.value)}
-								/>
+								<div className={css.guestInputWrapper}>
+									<input
+										className={`${css.guestInput}`}
+										value={guestValue}
+										placeholder="Add Guest Email (exp: guest@gmail.com)"
+										type="email"
+										onChange={handleOnChangeGuest}
+									/>
+									{guestValue && error && (
+										<small className={css.error}>Invalid Email</small>
+									)}
+								</div>
+
 								<button
 									type="button"
+									className={css.addGuestBtn}
 									onClick={handleAddGuest}
-									disabled={!guestValue}
-								>
-									+
-								</button>
+									disabled={!guestValue || error}
+								/>
 							</div>
 							<ol className={css.guestListWrapper}>
 								{guests.map((guest, idx) => (
@@ -72,10 +78,9 @@ const AddEventModal = (props: AddEventModalProps) => {
 										<li>{guest}</li>
 										<button
 											type="button"
+											className={css.deleteGuestBtn}
 											onClick={() => handleDeleteGuest(guest)}
-										>
-											X
-										</button>
+										/>
 									</div>
 								))}
 							</ol>
@@ -86,7 +91,7 @@ const AddEventModal = (props: AddEventModalProps) => {
 							type="submit"
 							className={css.saveBtn}
 							disabled={isDisabledSaveBtn}
-							onClick={onGenerateRandomColor}
+							onClick={() => generateColor()}
 						>
 							Save
 						</button>

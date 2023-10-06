@@ -2,13 +2,13 @@ import { DAYS, MONTHS } from "@/src/constants";
 import { dateRange, getDaysInMonth, getSortedDays } from "@/src/utils/utils";
 import { useContext, useEffect, useState } from "react";
 import { CalendarProps } from "./View.types";
-import { CalendarContext } from "@/src/context";
+import { CalendarContext, ToastErrorContext } from "@/src/context";
 import { EventObj } from "@/src/types";
-import useGenerateRandomColor from "@/src/hooks/useGenerateRandomColor";
 
 export const useView = (props: CalendarProps) => {
 	const { startDate } = props;
 	const { events } = useContext(CalendarContext);
+	const { setToastError } = useContext(ToastErrorContext);
 	const [currMonth, setCurrMonth] = useState(startDate.getMonth());
 	const [currYear, setCurrYear] = useState(startDate.getFullYear());
 	const currentMonth = MONTHS[currMonth];
@@ -17,10 +17,14 @@ export const useView = (props: CalendarProps) => {
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [showEditModal, setShowEditModal] = useState(false);
 	const [eventDate, setEventDate] = useState(Date);
-	const [editModalData, setEditModalData] = useState({});
+	const [editModalData, setEditModalData] = useState<EventObj>({
+		date: "",
+		id: "",
+		invitees: [],
+		time: "",
+		title: "",
+	});
 	const eventsArr: Array<EventObj> = Object.values(events);
-
-	const { color, generateColor } = useGenerateRandomColor();
 
 	useEffect(() => {
 		const newDays = () => {
@@ -81,17 +85,18 @@ export const useView = (props: CalendarProps) => {
 
 		if (eventLengthInADay < 3) {
 			setShowAddModal(true);
+		} else {
+			setToastError(true);
 		}
+
+		setTimeout(() => {
+			setToastError(false);
+		}, 2000);
 	};
 
 	const handleOnClickEventItem = (event: EventObj) => {
 		setShowEditModal(true);
 		setEditModalData(events[event.id]);
-		generateColor();
-	};
-
-	const handleGenerateRandomColor = () => {
-		generateColor();
 	};
 
 	return {
@@ -115,7 +120,5 @@ export const useView = (props: CalendarProps) => {
 		handleOnClickDateBox,
 		handleOnClickEventItem,
 		editModalData,
-		color,
-		handleGenerateRandomColor,
 	};
 };

@@ -1,6 +1,6 @@
 import { CalendarContext } from "@/src/context";
-import { FormEvent, useContext, useState } from "react";
-import { formattedTime } from "@/src/utils/utils";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { formattedTime, isValidEmail } from "@/src/utils/utils";
 import { EventObj } from "@/src/types";
 import { UpdateMyEventStore } from "@/src/utils/localStorage";
 import { EditEventModalProps } from "./View.types";
@@ -12,11 +12,31 @@ export const useView = (props: EditEventModalProps) => {
 	const [time, setTime] = useState(formattedTime(data.time, false));
 	const [guests, setGuests] = useState<Array<string | null>>(data.invitees);
 	const [guestValue, setGuestValue] = useState("");
+	const [error, setError] = useState(false);
+	const [isExistGuest, setIsExistGuest] = useState(false);
 	const createdEventDate = new Date(data.date).toLocaleDateString();
 
+	const handleOnChangeGuest = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!isValidEmail(e.target.value)) {
+			setError(true);
+		} else {
+			setError(false);
+		}
+
+		setGuestValue(e.target.value);
+	};
+
 	const handleAddGuest = () => {
-		setGuests((prev) => [...prev, guestValue]);
-		setGuestValue("");
+		if (!guests.includes(guestValue)) {
+			setIsExistGuest(false);
+			setGuests((prev) => [...prev, guestValue]);
+			setGuestValue("");
+		} else {
+			setIsExistGuest(true);
+			setTimeout(() => {
+				setIsExistGuest(false);
+			}, 3000);
+		}
 	};
 
 	const onSubmit = (e: FormEvent) => {
@@ -28,6 +48,7 @@ export const useView = (props: EditEventModalProps) => {
 			time: formattedTime(time),
 			invitees: guests,
 			date: createdEventDate,
+			color: data.color,
 		};
 
 		setEvents((state: EventObj) => ({
@@ -68,5 +89,8 @@ export const useView = (props: EditEventModalProps) => {
 		handleDeleteGuest,
 		handleDeleteEvent,
 		isDisabledSaveBtn,
+		handleOnChangeGuest,
+		error,
+		isExistGuest,
 	};
 };

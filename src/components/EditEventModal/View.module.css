@@ -57,7 +57,7 @@
 
 .titleInput:focus {
 	outline: none;
-	border-bottom: 2px solid orange;
+	border-bottom: 2px solid green;
 }
 
 .titleSection {
@@ -79,14 +79,14 @@
 .guestInputSection {
 	display: flex;
 	column-gap: 16px;
-	margin-bottom: 24px;
+	margin-bottom: 16px;
 }
 
 .timeIcon {
 	display: block;
 	width: 20px;
 	height: 20px;
-	background: url("/src/assets/icons/time-svgrepo-com.svg") no-repeat;
+	background: url("/src/assets/icons/ic-time.svg") no-repeat;
 	background-size: contain;
 }
 
@@ -94,18 +94,27 @@
 	display: block;
 	width: 20px;
 	height: 20px;
-	background: url("/src/assets/icons/people-svgrepo-com.svg") no-repeat;
+	background: url("/src/assets/icons/ic-people.svg") no-repeat;
 	background-size: contain;
 }
 
 .guestInput {
 	width: 100%;
 	border: none;
+	padding-bottom: 5px;
+	border-bottom: 2px solid transparent;
 }
 
 .guestInput:focus {
 	outline: none;
-	border-bottom: 2px solid gray;
+	border-bottom: 2px solid green;
+}
+
+.guestInputWrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 }
 
 .guestListWrapper {
@@ -117,6 +126,7 @@
 
 .guestList {
 	width: 100%;
+	padding: 2px 0;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -139,7 +149,7 @@
 	cursor: not-allowed;
 }
 
-.deleteBtn {
+.deleteEventBtn {
 	padding: 10px 16px;
 	color: #ffffff;
 	font-weight: 500;
@@ -149,4 +159,39 @@
 	border: 1px solid red;
 	border-radius: 5px;
 	cursor: pointer;
+}
+
+.addGuestBtn {
+	display: block;
+	width: 22px;
+	height: 22px;
+	border: 1px solid green;
+	border-radius: 5px;
+	padding: 3px;
+	background: url("/src/assets/icons/ic-plus.svg") no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+
+.addGuestBtn:disabled {
+	cursor: not-allowed;
+}
+
+.deleteGuestBtn {
+	display: block;
+	width: 20px;
+	height: 20px;
+	border: none;
+	background: url("/src/assets/icons/ic-trash.svg") no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+
+.errorTxt {
+	color: red;
+	visibility: hidden;
+}
+
+.isError {
+	visibility: visible;
 }

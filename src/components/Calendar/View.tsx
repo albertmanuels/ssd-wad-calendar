@@ -1,5 +1,5 @@
 import { DAYS } from "../../constants";
-import "./View.style.css";
+import css from "./View.module.css";
 import type { CalendarProps } from "./View.types";
 import { useView } from "./View.hook";
 import { getDateObj, isSameDate } from "@/src/utils/utils";
@@ -7,6 +7,7 @@ import AddEventModal from "../AddEventModal";
 import { Fragment } from "react";
 import EventItem from "../EventItem";
 import EditEventModal from "../EditEventModal";
+import Toast from "../ToastError";
 
 const Calendar = (props: CalendarProps) => {
 	const {
@@ -26,48 +27,52 @@ const Calendar = (props: CalendarProps) => {
 		handleOnClickDateBox,
 		handleOnClickEventItem,
 		editModalData,
-		color,
-		handleGenerateRandomColor,
 	} = useView(props);
 
 	return (
-		<div className="calendar-wrapper">
-			<div className="calendar-navigation">
-				<div className="navigation-wrapper">
-					<i className="left-arrow" onClick={handlePrevMonth} />
-					<h2>
-						{currentMonth} {currYear}
-					</h2>
-					<i className="right-arrow" onClick={handleNextMonth} />
+		<div className={css.calendarWrapper}>
+			<div className={css.calendarNavigation}>
+				<div className={css.navigationWrapper}>
+					<i className={css.leftArrow} onClick={handlePrevMonth} />
+					<div className={css.monthYearWrapper}>
+						<h2>
+							{currentMonth} {currYear}
+						</h2>
+					</div>
+
+					<i className={css.rightArrow} onClick={handleNextMonth} />
 				</div>
 			</div>
 
-			<ul className="calendar-header">
+			<ul className={css.calendarHeader}>
 				{DAYS.map((day) => (
-					<li key={day} className="list-day">
+					<li key={day} className={css.listDay}>
 						{day}
 					</li>
 				))}
 			</ul>
-			<div className="calendar-body">
+			<div className={css.calendarBody}>
 				{dates.map((date, idx) => (
 					<div
 						key={idx}
-						className={`date-box ${!date ? "no-date" : ""} ${
+						className={`${css.dayBox} ${!date && `${css.noDate}`} ${
 							isSameDate(new Date(), getDateObj(date, currMonth, currYear))
-								? "today"
+								? `${css.today}`
 								: ""
 						}`}
 						onClick={() => {
-							handleOnClickDateBox(date);
-							handleGetEventDate(date);
+							if (date) {
+								handleOnClickDateBox(date);
+								handleGetEventDate(date);
+							}
 						}}
 					>
-						<span className="date">{date}</span>
-						<div className="event-wrapper">
+						<span className={css.date}>{date}</span>
+						<div className={css.eventWrapper}>
 							{eventsArr.map((event) => (
 								<Fragment key={event.id}>
-									{isSameDate(
+									{date &&
+									isSameDate(
 										getDateObj(date, currMonth, currYear),
 										new Date(event.date)
 									) ? (
@@ -75,7 +80,6 @@ const Calendar = (props: CalendarProps) => {
 											key={event.id}
 											event={event}
 											handleOnClickEventItem={handleOnClickEventItem}
-											color={color}
 										/>
 									) : null}
 								</Fragment>
@@ -88,16 +92,15 @@ const Calendar = (props: CalendarProps) => {
 				<AddEventModal
 					onClose={() => setShowAddModal(false)}
 					eventDate={eventDate}
-					onGenerateRandomColor={handleGenerateRandomColor}
 				/>
 			)}
 			{showEditModal && (
 				<EditEventModal
 					onClose={() => setShowEditModal(false)}
 					data={editModalData}
-					eventsArr={eventsArr}
 				/>
 			)}
+			<Toast eventDate={eventDate} />
 		</div>
 	);
 };

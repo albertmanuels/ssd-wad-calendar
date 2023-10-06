@@ -4,4 +4,5 @@ export type EventObj = {
 	invitees: string[];
 	time: string;
 	title: string;
+	color?: string;
 };

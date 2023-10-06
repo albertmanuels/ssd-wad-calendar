@@ -11,13 +11,15 @@ const EditEventModal = (props: EditEventModalProps) => {
 		time,
 		setTime,
 		guestValue,
-		setGuestValue,
 		guests,
 		handleAddGuest,
 		handleDeleteGuest,
 		onSubmit,
 		handleDeleteEvent,
 		isDisabledSaveBtn,
+		handleOnChangeGuest,
+		error,
+		isExistGuest,
 	} = useView(props);
 
 	return (
@@ -53,20 +55,35 @@ const EditEventModal = (props: EditEventModalProps) => {
 						<div className={css.guestSection}>
 							<div className={css.guestInputSection}>
 								<i className={css.guestIcon} />
-								<input
-									className={css.guestInput}
-									value={guestValue}
-									placeholder="Add Guests"
-									type="email"
-									onChange={(e) => setGuestValue(e.target.value)}
-								/>
+								<div className={css.guestInputWrapper}>
+									<input
+										className={css.guestInput}
+										value={guestValue}
+										placeholder="Add Guest Email (exp: guest@gmail.com)"
+										type="email"
+										onChange={handleOnChangeGuest}
+									/>
+
+									<small
+										className={`${css.errorTxt} ${
+											((guestValue && error) || isExistGuest) &&
+											`${css.isError}`
+										}
+                    
+                    `}
+									>
+										{isExistGuest
+											? "	Guest is already added in list"
+											: "		Invalid Email"}
+									</small>
+								</div>
+
 								<button
 									type="button"
+									className={css.addGuestBtn}
 									onClick={handleAddGuest}
-									disabled={!guestValue}
-								>
-									Add
-								</button>
+									disabled={!guestValue || error}
+								/>
 							</div>
 							<ol className={css.guestListWrapper}>
 								{guests.map((guest, idx) => (
@@ -74,10 +91,9 @@ const EditEventModal = (props: EditEventModalProps) => {
 										<li>{guest}</li>
 										<button
 											type="button"
+											className={css.deleteGuestBtn}
 											onClick={() => handleDeleteGuest(guest)}
-										>
-											X
-										</button>
+										/>
 									</div>
 								))}
 							</ol>
@@ -86,7 +102,7 @@ const EditEventModal = (props: EditEventModalProps) => {
 					<div className={css.modalFooter}>
 						<button
 							type="button"
-							className={css.deleteBtn}
+							className={css.deleteEventBtn}
 							onClick={() => handleDeleteEvent(data.id)}
 						>
 							Delete
