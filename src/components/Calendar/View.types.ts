@@ -1,9 +1,9 @@
-type Events = {
+export type EventItems = {
 	name: string;
-	date: Date;
+	time: Date;
 	invitees: string[];
+	date: Date;
 };
 export interface CalendarProps {
 	startDate: Date;
-	events: Array<Events>;
 }

@@ -1,36 +1,26 @@
 import "./App.css";
 import Calendar from "@/src/components/Calendar";
+import { CalendarContext } from "./context";
+import { useEffect, useMemo, useState } from "react";
+import { StoreMyEvents, UpdateMyEventStore } from "./utils/localStorage";
 
 function App() {
 	const startDate = new Date();
+	const [events, setEvents] = useState([]);
+	const data = useMemo(() => ({ events, setEvents }), [events, setEvents]);
 
-	const EVENTS = [
-		{
-			date: new Date("2023-10-08"),
-			name: "Project A",
-			invitees: ["albert@gmail.com", "manuel@gmail.com"],
-		},
-		{
-			date: new Date("2023-10-08"),
-			name: "Project B",
-			invitees: ["jhondoe@gmail.com"],
-		},
-		{
-			date: new Date("2023-10-08"),
-			name: "Project C",
-			invitees: ["jhondoe@gmail.com"],
-		},
-		{
-			date: new Date("2023-10-16"),
-			name: "Project XX",
-			invitees: ["jhondoe@gmail.com"],
-		},
-	];
+	useEffect(() => {
+		const data = StoreMyEvents();
+		setEvents(data);
+		UpdateMyEventStore(data);
+	}, []);
 
 	return (
-		<main className="layout">
-			<Calendar startDate={startDate} events={EVENTS} />
-		</main>
+		<CalendarContext.Provider value={data}>
+			<main className="layout">
+				<Calendar startDate={startDate} />
+			</main>
+		</CalendarContext.Provider>
 	);
 }
 

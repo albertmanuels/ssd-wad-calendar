@@ -1,21 +1,33 @@
 import { DAYS } from "../../constants";
 import "./View.style.css";
-import { CalendarProps } from "./View.types";
+import type { CalendarProps } from "./View.types";
 import { useView } from "./View.hook";
 import { getDateObj, isSameDate } from "@/src/utils/utils";
+import AddEventModal from "../AddEventModal";
 import { Fragment } from "react";
 import EventItem from "../EventItem";
+import EditEventModal from "../EditEventModal";
 
 const Calendar = (props: CalendarProps) => {
-	const { events } = props;
 	const {
 		currYear,
 		currMonth,
 		currentMonth,
 		dates,
-
 		handleNextMonth,
 		handlePrevMonth,
+		showAddModal,
+		setShowAddModal,
+		showEditModal,
+		setShowEditModal,
+		eventDate,
+		eventsArr,
+		handleGetEventDate,
+		handleOnClickDateBox,
+		handleOnClickEventItem,
+		editModalData,
+		color,
+		handleGenerateRandomColor,
 	} = useView(props);
 
 	return (
@@ -46,21 +58,46 @@ const Calendar = (props: CalendarProps) => {
 								? "today"
 								: ""
 						}`}
+						onClick={() => {
+							handleOnClickDateBox(date);
+							handleGetEventDate(date);
+						}}
 					>
 						<span className="date">{date}</span>
 						<div className="event-wrapper">
-							{events.map((event, idx) => (
-								<Fragment key={idx}>
+							{eventsArr.map((event) => (
+								<Fragment key={event.id}>
 									{isSameDate(
 										getDateObj(date, currMonth, currYear),
-										event.date
-									) && <EventItem event={event} />}
+										new Date(event.date)
+									) ? (
+										<EventItem
+											key={event.id}
+											event={event}
+											handleOnClickEventItem={handleOnClickEventItem}
+											color={color}
+										/>
+									) : null}
 								</Fragment>
 							))}
 						</div>
 					</div>
 				))}
 			</div>
+			{showAddModal && (
+				<AddEventModal
+					onClose={() => setShowAddModal(false)}
+					eventDate={eventDate}
+					onGenerateRandomColor={handleGenerateRandomColor}
+				/>
+			)}
+			{showEditModal && (
+				<EditEventModal
+					onClose={() => setShowEditModal(false)}
+					data={editModalData}
+					eventsArr={eventsArr}
+				/>
+			)}
 		</div>
 	);
 };

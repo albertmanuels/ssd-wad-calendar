@@ -1,24 +1,25 @@
 import { EventItemProps } from "./View.types";
-import style from "./View.module.css";
+import css from "./View.module.css";
 
 const EventItem = (props: EventItemProps) => {
-	const { event } = props;
+	const { event, handleOnClickEventItem } = props;
 
 	return (
 		<button
-			className={`${style.eventItem}`}
+			className={`${css.eventItem}`}
 			onClick={(e) => {
 				e.stopPropagation();
+				handleOnClickEventItem(event);
 			}}
 		>
-			<p className="event-name">{event.name}</p>
+			<p className={css.eventTitle}>{event.title}</p>
 			<ol className="event-list">
 				{event.invitees.map((email: string) => (
 					<li key={email}>{email}</li>
 				))}
 			</ol>
 
-			<p className="event-schedule">{event.date.toLocaleDateString("id")}</p>
+			<p className="event-schedule">{event.time}</p>
 		</button>
 	);
 };
